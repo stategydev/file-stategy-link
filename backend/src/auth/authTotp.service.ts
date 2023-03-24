@@ -8,7 +8,6 @@ import { User } from "@prisma/client";
 import * as argon from "argon2";
 import { authenticator, totp } from "otplib";
 import * as qrcode from "qrcode-svg";
-import { ConfigService } from "src/config/config.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthService } from "./auth.service";
 import { AuthSignInTotpDTO } from "./dto/authSignInTotp.dto";
@@ -17,8 +16,7 @@ import { AuthSignInTotpDTO } from "./dto/authSignInTotp.dto";
 export class AuthTotpService {
   constructor(
     private prisma: PrismaService,
-    private authService: AuthService,
-    private config: ConfigService
+    private authService: AuthService
   ) {}
 
   async signInTotp(dto: AuthSignInTotpDTO) {
@@ -44,7 +42,7 @@ export class AuthTotpService {
       throw new UnauthorizedException("Invalid login token");
 
     if (token.expiresAt < new Date())
-      throw new UnauthorizedException("Login token expired", "token_expired");
+      throw new UnauthorizedException("Login token expired");
 
     // Check the TOTP code
     const { totpSecret } = await this.prisma.user.findUnique({
@@ -97,7 +95,7 @@ export class AuthTotpService {
 
     const otpURL = totp.keyuri(
       user.username || user.email,
-      this.config.get("general.appName"),
+      "pingvin-share",
       secret
     );
 

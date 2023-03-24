@@ -6,7 +6,7 @@ import {
 } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
-import { Notifications } from "@mantine/notifications";
+import { NotificationsProvider } from "@mantine/notifications";
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
@@ -76,39 +76,40 @@ function App({ Component, pageProps }: AppProps) {
         toggleColorScheme={toggleColorScheme}
       >
         <GlobalStyle />
-        <Notifications />
-        <ModalsProvider>
-          <ConfigContext.Provider
-            value={{
-              configVariables,
-              refresh: async () => {
-                setConfigVariables(await configService.list());
-              },
-            }}
-          >
-            <UserContext.Provider
+        <NotificationsProvider>
+          <ModalsProvider>
+            <ConfigContext.Provider
               value={{
-                user,
-                refreshUser: async () => {
-                  const user = await userService.getCurrentUser();
-                  setUser(user);
-                  return user;
+                configVariables,
+                refresh: async () => {
+                  setConfigVariables(await configService.list());
                 },
               }}
             >
-              {excludeDefaultLayoutRoutes.includes(route) ? (
-                <Component {...pageProps} />
-              ) : (
-                <>
-                  <Header />
-                  <Container>
-                    <Component {...pageProps} />
-                  </Container>
-                </>
-              )}
-            </UserContext.Provider>
-          </ConfigContext.Provider>
-        </ModalsProvider>
+              <UserContext.Provider
+                value={{
+                  user,
+                  refreshUser: async () => {
+                    const user = await userService.getCurrentUser();
+                    setUser(user);
+                    return user;
+                  },
+                }}
+              >
+                {excludeDefaultLayoutRoutes.includes(route) ? (
+                  <Component {...pageProps} />
+                ) : (
+                  <>
+                    <Header />
+                    <Container>
+                      <Component {...pageProps} />
+                    </Container>
+                  </>
+                )}
+              </UserContext.Provider>
+            </ConfigContext.Provider>
+          </ModalsProvider>
+        </NotificationsProvider>
       </ColorSchemeProvider>
     </MantineProvider>
   );

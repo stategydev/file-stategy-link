@@ -7,6 +7,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Title,
   Tooltip,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
@@ -26,7 +27,7 @@ const showEnableTotpModal = (
   }
 ) => {
   return modals.openModal({
-    title: "Enable TOTP",
+    title: <Title order={4}>Enable TOTP</Title>,
     children: (
       <CreateEnableTotpModal options={options} refreshUser={refreshUser} />
     ),

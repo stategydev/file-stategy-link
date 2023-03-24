@@ -20,13 +20,13 @@ const useStyles = createStyles((theme) => ({
   inner: {
     display: "flex",
     justifyContent: "space-between",
-    paddingTop: `calc(${theme.spacing.md} * 4)`,
-    paddingBottom: `calc(${theme.spacing.md} * 4)`,
+    paddingTop: theme.spacing.xl * 4,
+    paddingBottom: theme.spacing.xl * 4,
   },
 
   content: {
     maxWidth: 480,
-    marginRight: `calc(${theme.spacing.md} * 3)`,
+    marginRight: theme.spacing.xl * 3,
 
     [theme.fn.smallerThan("md")]: {
       maxWidth: "100%",
@@ -89,12 +89,11 @@ export default function Home() {
         <div className={classes.inner}>
           <div className={classes.content}>
             <Title className={classes.title}>
-              A <span className={classes.highlight}>self-hosted</span> <br />{" "}
+              A <span className={classes.highlight}>privacy focused</span> <br />{" "}
               file sharing platform.
             </Title>
             <Text color="dimmed" mt="md">
-              Do you really want to give your personal files in the hand of
-              third parties like WeTransfer?
+              A file transfer service for Stategy customers.
             </Text>
 
             <List
@@ -109,19 +108,18 @@ export default function Home() {
             >
               <List.Item>
                 <div>
-                  <b>Self-Hosted</b> - Host Pingvin Share on your own machine.
+                  <b>U.S.A. Hosted</b> - Hosted in datacentres accrross U.S.A.
                 </div>
               </List.Item>
               <List.Item>
                 <div>
-                  <b>Privacy</b> - Your files are your files and should never
-                  get into the hands of third parties.
+                  <b>Privacy</b> - Your files in your dedicates Stategy Space.
                 </div>
               </List.Item>
               <List.Item>
                 <div>
                   <b>No annoying file size limit</b> - Upload as big files as
-                  you want. Only your hard drive will be your limit.
+                  you want. Only your companies Stategy virtual hard drive will be your limit.
                 </div>
               </List.Item>
             </List>
@@ -138,14 +136,14 @@ export default function Home() {
               </Button>
               <Button
                 component={Link}
-                href="https://github.com/stonith404/pingvin-share"
+                href="https://stategy.com"
                 target="_blank"
                 variant="default"
                 radius="xl"
                 size="md"
                 className={classes.control}
               >
-                Source code
+                stategy.com
               </Button>
             </Group>
           </div>

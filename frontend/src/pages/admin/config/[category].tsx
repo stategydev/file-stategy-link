@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import AdminConfigInput from "../../../components/admin/configuration/AdminConfigInput";
 import ConfigurationHeader from "../../../components/admin/configuration/ConfigurationHeader";
 import ConfigurationNavBar from "../../../components/admin/configuration/ConfigurationNavBar";
-import LogoConfigInput from "../../../components/admin/configuration/LogoConfigInput";
 import TestEmailButton from "../../../components/admin/configuration/TestEmailButton";
 import CenterLoader from "../../../components/core/CenterLoader";
 import Meta from "../../../components/Meta";
@@ -37,50 +36,30 @@ export default function AppShellDemo() {
   const isMobile = useMediaQuery("(max-width: 560px)");
   const config = useConfig();
 
-  const categoryId = (router.query.category as string | undefined) ?? "general";
+  const categoryId = router.query.category as string;
 
   const [configVariables, setConfigVariables] = useState<AdminConfig[]>();
   const [updatedConfigVariables, setUpdatedConfigVariables] = useState<
     UpdateConfig[]
   >([]);
 
-  const [logo, setLogo] = useState<File | null>(null);
-
   const saveConfigVariables = async () => {
-    if (logo) {
-      configService
-        .changeLogo(logo)
-        .then(() => {
-          setLogo(null);
-          toast.success(
-            "Logo updated successfully. It may take a few minutes to update on the website."
-          );
-        })
-        .catch(toast.axiosError);
-    }
-
-    if (updatedConfigVariables.length > 0) {
-      await configService
-        .updateMany(updatedConfigVariables)
-        .then(() => {
-          setUpdatedConfigVariables([]);
-          toast.success("Configurations updated successfully");
-        })
-        .catch(toast.axiosError);
-      void config.refresh();
-    }
+    await configService
+      .updateMany(updatedConfigVariables)
+      .then(() => {
+        setUpdatedConfigVariables([]);
+        toast.success("Configurations updated successfully");
+      })
+      .catch(toast.axiosError);
+    config.refresh();
   };
 
   const updateConfigVariable = (configVariable: UpdateConfig) => {
     const index = updatedConfigVariables.findIndex(
       (item) => item.key === configVariable.key
     );
-
     if (index > -1) {
-      updatedConfigVariables[index] = {
-        ...updatedConfigVariables[index],
-        ...configVariable,
-      };
+      updatedConfigVariables[index] = configVariable;
     } else {
       setUpdatedConfigVariables([...updatedConfigVariables, configVariable]);
     }
@@ -136,24 +115,9 @@ export default function AppShellDemo() {
                       <Title order={6}>
                         {configVariableToFriendlyName(configVariable.name)}
                       </Title>
-                      {configVariable.description.split("\n").length == 1 ? (
-                        <Text color="dimmed" size="sm" mb="xs">
-                          {configVariable.description}
-                        </Text>
-                      ) : (
-                        configVariable.description.split("\n").map((line) => (
-                          <Text
-                            key={line}
-                            color="dimmed"
-                            size="sm"
-                            style={{
-                              marginBottom: line === "" ? "1rem" : "0",
-                            }}
-                          >
-                            {line}
-                          </Text>
-                        ))
-                      )}
+                      <Text color="dimmed" size="sm" mb="xs">
+                        {configVariable.description}
+                      </Text>
                     </Stack>
                     <Stack></Stack>
                     <Box style={{ width: isMobile ? "100%" : "50%" }}>
@@ -165,9 +129,6 @@ export default function AppShellDemo() {
                     </Box>
                   </Group>
                 ))}
-                {categoryId == "general" && (
-                  <LogoConfigInput logo={logo} setLogo={setLogo} />
-                )}
               </Stack>
               <Group mt="lg" position="right">
                 {categoryId == "smtp" && (

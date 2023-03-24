@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Box,
   Group,
   Skeleton,
   Stack,
@@ -9,7 +8,9 @@ import {
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { useModals } from "@mantine/modals";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import mime from "mime-types";
+
+import Link from "next/link";
 import { TbDownload, TbEye, TbLink } from "react-icons/tb";
 import useConfig from "../../hooks/config.hook";
 import shareService from "../../services/share.service";
@@ -17,49 +18,19 @@ import { FileMetaData } from "../../types/File.type";
 import { Share } from "../../types/share.type";
 import { byteToHumanSizeString } from "../../utils/fileSize.util";
 import toast from "../../utils/toast.util";
-import TableSortIcon, { TableSort } from "../core/SortIcon";
-import showFilePreviewModal from "./modals/showFilePreviewModal";
 
 const FileList = ({
   files,
-  setShare,
   share,
   isLoading,
 }: {
   files?: FileMetaData[];
-  setShare: Dispatch<SetStateAction<Share | undefined>>;
   share: Share;
   isLoading: boolean;
 }) => {
   const clipboard = useClipboard();
   const config = useConfig();
   const modals = useModals();
-
-  const [sort, setSort] = useState<TableSort>({
-    property: undefined,
-    direction: "desc",
-  });
-
-  const sortFiles = () => {
-    if (files && sort.property) {
-      const sortedFiles = files.sort((a: any, b: any) => {
-        if (sort.direction === "asc") {
-          return b[sort.property!].localeCompare(a[sort.property!], undefined, {
-            numeric: true,
-          });
-        } else {
-          return a[sort.property!].localeCompare(b[sort.property!], undefined, {
-            numeric: true,
-          });
-        }
-      });
-
-      setShare({
-        ...share,
-        files: sortedFiles,
-      });
-    }
-  };
 
   const copyFileLink = (file: FileMetaData) => {
     const link = `${config.get("general.appUrl")}/api/shares/${
@@ -81,70 +52,55 @@ const FileList = ({
     }
   };
 
-  useEffect(sortFiles, [sort]);
-
   return (
-    <Box sx={{ display: "block", overflowX: "auto" }}>
-      <Table>
-        <thead>
-          <tr>
-            <th>
-              <Group spacing="xs">
-                Name
-                <TableSortIcon sort={sort} setSort={setSort} property="name" />
-              </Group>
-            </th>
-            <th>
-              <Group spacing="xs">
-                Size
-                <TableSortIcon sort={sort} setSort={setSort} property="size" />
-              </Group>
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {isLoading
-            ? skeletonRows
-            : files!.map((file) => (
-                <tr key={file.name}>
-                  <td>{file.name}</td>
-                  <td>{byteToHumanSizeString(parseInt(file.size))}</td>
-                  <td>
-                    <Group position="right">
-                      {shareService.doesFileSupportPreview(file.name) && (
-                        <ActionIcon
-                          onClick={() =>
-                            showFilePreviewModal(share.id, file, modals)
-                          }
-                          size={25}
-                        >
-                          <TbEye />
-                        </ActionIcon>
-                      )}
-                      {!share.hasPassword && (
-                        <ActionIcon
-                          size={25}
-                          onClick={() => copyFileLink(file)}
-                        >
-                          <TbLink />
-                        </ActionIcon>
-                      )}
+    <Table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Size</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {isLoading
+          ? skeletonRows
+          : files!.map((file) => (
+              <tr key={file.name}>
+                <td>{file.name}</td>
+                <td>{byteToHumanSizeString(parseInt(file.size))}</td>
+                <td>
+                  <Group position="right">
+                    {shareService.doesFileSupportPreview(file.name) && (
                       <ActionIcon
+                        component={Link}
+                        href={`/share/${share.id}/preview/${
+                          file.id
+                        }?type=${mime.contentType(file.name)}`}
+                        target="_blank"
                         size={25}
-                        onClick={async () => {
-                          await shareService.downloadFile(share.id, file.id);
-                        }}
                       >
-                        <TbDownload />
+                        <TbEye />
                       </ActionIcon>
-                    </Group>
-                  </td>
-                </tr>
-              ))}
-        </tbody>
-      </Table>
-    </Box>
+                    )}
+                    {!share.hasPassword && (
+                      <ActionIcon size={25} onClick={() => copyFileLink(file)}>
+                        <TbLink />
+                      </ActionIcon>
+                    )}
+                    <ActionIcon
+                      size={25}
+                      onClick={async () => {
+                        await shareService.downloadFile(share.id, file.id);
+                      }}
+                    >
+                      <TbDownload />
+                    </ActionIcon>
+                  </Group>
+                </td>
+              </tr>
+            ))}
+      </tbody>
+    </Table>
   );
 };
 

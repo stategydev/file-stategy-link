@@ -1,6 +1,6 @@
-# <div align="center"><img  src="https://user-images.githubusercontent.com/58886915/166198400-c2134044-1198-4647-a8b6-da9c4a204c68.svg" width="40"/> </br>Pingvin Share</div>
+# <div align="center"><img  src="https://file.stategy.link/_next/image?url=%2Fimg%2Flogo.png&w=96&q=75" width="40"/> </br>Stategy Share</div>
 
-Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer.
+Stategy Share is self-hosted file sharing platform and an alternative for WeTransfer.
 
 ## ✨ Features
 
@@ -11,35 +11,35 @@ Pingvin Share is self-hosted file sharing platform and an alternative for WeTran
 - Email recipients
 - Integration with ClamAV for security scans
 
-## 🐧 Get to know Pingvin Share
+## 🐧 Get to know Stategy Share
 
 - [Demo](https://pingvin-share.dev.eliasschneider.com)
 - [Review by DB Tech](https://www.youtube.com/watch?v=rWwNeZCOPJA)
 
-<img src="https://user-images.githubusercontent.com/58886915/225038319-b2ef742c-3a74-4eb6-9689-4207a36842a4.png" width="700"/>
+<img src="https://user-images.githubusercontent.com/58886915/167101708-b85032ad-f5b1-480a-b8d7-ec0096ea2a43.png" width="700"/>
 
 ## ⌨️ Setup
 
-> Note: Pingvin Share is in its early stages and may contain bugs.
+> Note: Stategy Share is in its early stages and may contain bugs.
 
 ### Installation with Docker (recommended)
 
 1. Download the `docker-compose.yml` file
 2. Run `docker-compose up -d`
 
-The website is now listening on `http://localhost:3000`, have fun with Pingvin Share 🐧!
+The website is now listening on `http://localhost:3000`, have fun with Stategy Share 🐧!
 
 ### Stand-alone Installation
 
 Required tools:
 
-- [Node.js](https://nodejs.org/en/download/) >= 16
+- [Node.js](https://nodejs.org/en/download/) >= 14
 - [Git](https://git-scm.com/downloads)
-- [pm2](https://pm2.keymetrics.io/) for running Pingvin Share in the background
+- [pm2](https://pm2.keymetrics.io/) for running Stategy Share in the background
 
 ```bash
-git clone https://github.com/stonith404/pingvin-share
-cd pingvin-share
+git clone https://github.com/stategyhq/file-stategy-link
+cd file-stategy-link
 
 # Checkout the latest version
 git fetch --tags && git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
@@ -57,7 +57,7 @@ npm run build
 pm2 start --name="pingvin-share-frontend" npm -- run start
 ```
 
-The website is now listening on `http://localhost:3000`, have fun with Pingvin Share 🐧!
+The website is now listening on `http://localhost:3000`, have fun with Stategy Share 🐧!
 
 ### Integrations
 
@@ -66,8 +66,8 @@ The website is now listening on `http://localhost:3000`, have fun with Pingvin S
 ClamAV is used to scan shares for malicious files and remove them if found.
 
 1. Add the ClamAV container to the Docker Compose stack (see `docker-compose.yml`) and start the container.
-2. Docker will wait for ClamAV to start before starting Pingvin Share. This may take a minute or two.
-3. The Pingvin Share logs should now log "ClamAV is active"
+2. Docker will wait for ClamAV to start before starting Stategy Share. This may take a minute or two.
+3. The Stategy Share logs should now log "ClamAV is active"
 
 Please note that ClamAV needs a lot of [ressources](https://docs.clamav.net/manual/Installing/Docker.html#memory-ram-requirements).
 
@@ -77,7 +77,7 @@ Please note that ClamAV needs a lot of [ressources](https://docs.clamav.net/manu
 
 ### Upgrade to a new version
 
-As Pingvin Share is in early stage, see the release notes for breaking changes before upgrading.
+As Stategy Share is in early stage, see the release notes for breaking changes before upgrading.
 
 #### Docker
 
@@ -88,32 +88,27 @@ docker compose up -d
 
 #### Stand-alone
 
-1. Stop the running app
-    ```bash
-    pm2 stop pingvin-share-backend pingvin-share-frontend
-    ```
-2. Repeat the steps from the [installation guide](#stand-alone-installation) except the `git clone` step.
-   ```bash
-   cd pingvin-share
-
-   # Checkout the latest version
-   git fetch --tags && git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
-
-   # Start the backend
-   cd backend
-   npm run build
-   pm2 restart pingvin-share-backend
-
-   # Start the frontend
-   cd ../frontend
-   npm run build
-   pm2 restart pingvin-share-frontend
+1. Remove the running app
    ```
+   pm2 delete pingvin-share-backend pingvin-share-frontend
+   ```
+2. Repeat the steps from the [installation guide](#stand-alone-installation) except the `git clone` step.
 
 ### Custom branding
 
-You can change the name and the logo of the app by visiting the admin configuration page.
+#### Name
+
+You can change the name of the app by visiting the admin configuration page and changing the `App Name`.
+
+#### Logo
+
+You can change the logo of the app by replacing the images in the `/data/images` (or with the standalone installation `/frontend/public/img`) folder with your own logo. The folder contains the following images:
+
+- `logo.png` - The logo in the header and home page
+- `favicon.png` - The favicon
+- `opengraph.png` - The image used for sharing on social media
+- `icons/*` - The icons used for the PWA
 
 ## 🖤 Contribute
 
-You're very welcome to contribute to Pingvin Share! Follow the [contribution guide](/CONTRIBUTING.md) to get started.
+You're very welcome to contribute to Stategy Share! Follow the [contribution guide](/CONTRIBUTING.md) to get started.

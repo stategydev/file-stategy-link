@@ -6,6 +6,7 @@ import {
   Stack,
   Switch,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { ModalsContextProps } from "@mantine/modals/lib/context";
@@ -20,7 +21,7 @@ const showUpdateUserModal = (
   getUsers: () => void
 ) => {
   return modals.openModal({
-    title: `Update ${user.username}`,
+    title: <Title order={5}>Update {user.username}</Title>,
     children: <Body user={user} modals={modals} getUsers={getUsers} />,
   });
 };

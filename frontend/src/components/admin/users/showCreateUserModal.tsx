@@ -5,6 +5,7 @@ import {
   Stack,
   Switch,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import { ModalsContextProps } from "@mantine/modals/lib/context";
@@ -18,7 +19,7 @@ const showCreateUserModal = (
   getUsers: () => void
 ) => {
   return modals.openModal({
-    title: "Create user",
+    title: <Title order={5}>Create user</Title>,
     children: (
       <Body modals={modals} smtpEnabled={smtpEnabled} getUsers={getUsers} />
     ),
@@ -78,12 +79,13 @@ const Body = ({
               })}
             />
           )}
-          {(form.values.setPasswordManually || !smtpEnabled) && (
-            <PasswordInput
-              label="Password"
-              {...form.getInputProps("password")}
-            />
-          )}
+          {form.values.setPasswordManually ||
+            (!smtpEnabled && (
+              <PasswordInput
+                label="Password"
+                {...form.getInputProps("password")}
+              />
+            ))}
           <Switch
             styles={{
               body: {

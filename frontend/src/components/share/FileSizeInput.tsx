@@ -34,10 +34,8 @@ const FileSizeInput = ({
           label={label}
           value={size}
           onChange={(value) => {
-            if (value) {
-              setSize(value);
-              onChange(unitAndSizeToByte(unit, value));
-            }
+            setSize(value!);
+            onChange(unitAndSizeToByte(unit, value!));
           }}
         />
       </Col>

@@ -32,8 +32,7 @@ export class FileController {
   ) {
     const { id, name, chunkIndex, totalChunks } = query;
 
-    // Data can be empty if the file is empty
-    const data = body.toString().split(",")[1] ?? "";
+    const data = body.toString().split(",")[1];
 
     return await this.fileService.create(
       data,
@@ -52,7 +51,7 @@ export class FileController {
     const zip = this.fileService.getZip(shareId);
     res.set({
       "Content-Type": "application/zip",
-      "Content-Disposition": contentDisposition(`${shareId}.zip`),
+      "Content-Disposition": contentDisposition(`pingvin-share-${shareId}.zip`),
     });
 
     return new StreamableFile(zip);

@@ -23,12 +23,10 @@ const get = (key: string, configVariables: Config[]): any => {
 
   if (!configVariable) throw new Error(`Config variable ${key} not found`);
 
-  const value = configVariable.value ?? configVariable.defaultValue;
-
-  if (configVariable.type == "number") return parseInt(value);
-  if (configVariable.type == "boolean") return value == "true";
+  if (configVariable.type == "number") return parseInt(configVariable.value);
+  if (configVariable.type == "boolean") return configVariable.value == "true";
   if (configVariable.type == "string" || configVariable.type == "text")
-    return value;
+    return configVariable.value;
 };
 
 const finishSetup = async (): Promise<AdminConfig[]> => {
@@ -48,12 +46,6 @@ const isNewReleaseAvailable = async () => {
   return response.tag_name.replace("v", "") != process.env.VERSION;
 };
 
-const changeLogo = async (file: File) => {
-  const form = new FormData();
-  form.append("file", file);
-
-  await api.post("/configs/admin/logo", form);
-};
 export default {
   list,
   getByCategory,
@@ -62,5 +54,4 @@ export default {
   finishSetup,
   sendTestEmail,
   isNewReleaseAvailable,
-  changeLogo,
 };

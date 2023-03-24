@@ -9,7 +9,6 @@ import showEnterPasswordModal from "../../../components/share/showEnterPasswordM
 import showErrorModal from "../../../components/share/showErrorModal";
 import shareService from "../../../services/share.service";
 import { Share as ShareType } from "../../../types/share.type";
-import toast from "../../../utils/toast.util";
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -29,15 +28,12 @@ const Share = ({ shareId }: { shareId: string }) => {
         getFiles();
       })
       .catch((e) => {
-        const { error } = e.response.data;
-        if (error == "share_max_views_exceeded") {
+        if (e.response.data.error == "share_max_views_exceeded") {
           showErrorModal(
             modals,
             "Visitor limit exceeded",
             "The visitor limit from this share has been exceeded."
           );
-        } else {
-          toast.axiosError(e);
         }
       });
   };
@@ -89,12 +85,7 @@ const Share = ({ shareId }: { shareId: string }) => {
         {share?.files.length > 1 && <DownloadAllButton shareId={shareId} />}
       </Group>
 
-      <FileList
-        files={share?.files}
-        setShare={setShare}
-        share={share!}
-        isLoading={!share}
-      />
+      <FileList files={share?.files} share={share!} isLoading={!share} />
     </>
   );
 };

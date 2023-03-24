@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import * as argon from "argon2";
-import * as crypto from "crypto";
 import { EmailService } from "src/email/email.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDTO } from "./dto/createUser.dto";
@@ -29,7 +28,7 @@ export class UserSevice {
     if (!dto.password) {
       const randomPassword = crypto.randomUUID();
       hash = await argon.hash(randomPassword);
-      await this.emailService.sendInviteEmail(dto.email, randomPassword);
+      this.emailService.sendInviteEmail(dto.email, randomPassword);
     } else {
       hash = await argon.hash(dto.password);
     }

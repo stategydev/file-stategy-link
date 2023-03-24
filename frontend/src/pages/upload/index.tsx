@@ -59,10 +59,7 @@ const Upload = ({
 
         setFileProgress(1);
 
-        let chunks = Math.ceil(file.size / chunkSize);
-
-        // If the file is 0 bytes, we still need to upload 1 chunk
-        if (chunks == 0) chunks++;
+        const chunks = Math.ceil(file.size / chunkSize);
 
         for (let chunkIndex = 0; chunkIndex < chunks; chunkIndex++) {
           const from = chunkIndex * chunkSize;
@@ -81,7 +78,7 @@ const Upload = ({
                       name: file.name,
                     },
                     chunkIndex,
-                    chunks
+                    Math.ceil(file.size / chunkSize)
                   )
                   .then((response) => {
                     fileId = response.id;
@@ -128,7 +125,7 @@ const Upload = ({
         toast.error(
           `${fileErrorCount} file(s) failed to upload. Trying again.`,
           {
-            withCloseButton: false,
+            disallowClose: true,
             autoClose: false,
           }
         );
